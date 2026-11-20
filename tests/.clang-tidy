@@ -1,0 +1,68 @@
+---
+# Relaxed clang-tidy configuration for test code (see the root .clang-tidy
+# for the full rationale; clang-tidy uses the closest .clang-tidy next to
+# each source file, so this file applies to everything under tests/).
+#
+# Differences from the production config:
+#   - readability-function-cognitive-complexity is off: test functions
+#     legitimately carry lots of QtTest boilerplate (QVERIFY/QCOMPARE plus
+#     menu-driving sequences).
+#   - misc-override-with-different-visibility is off: test subclasses
+#     intentionally re-expose protected members (chooseDirectory,
+#     createDefaultPlayer, ...) to drive them.
+#
+# Everything else matches the root configuration; keep the two in sync.
+
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-exception-escape,
+  -bugprone-integer-division,
+  -bugprone-throwing-static-initialization,
+  -bugprone-unhandled-exception-at-new,
+  -bugprone-unhandled-exception-at-range,
+  clang-analyzer-*,
+  -clang-analyzer-optin.*,
+  cppcoreguidelines-init-variables,
+  cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  cppcoreguidelines-pro-bounds-constant-array-index,
+  cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  cppcoreguidelines-pro-type-const-cast,
+  cppcoreguidelines-pro-type-reinterpret-cast,
+  modernize-*,
+  -modernize-use-auto,
+  -modernize-use-nodiscard,
+  -modernize-use-resource-ptr,
+  -modernize-use-trailing-return-type,
+  misc-*,
+  -misc-const-correctness,
+  -misc-include-cleaner,
+  -misc-no-recursion,
+  -misc-non-copyable-objects,
+  -misc-non-private-member-variables-in-classes,
+  -misc-override-with-different-visibility,
+  -misc-unused-functions,
+  -misc-unused-parameters,
+  performance-*,
+  -performance-avoid-excessive-padding,
+  -performance-enum-size,
+  readability-*,
+  -readability-avoid-const-params-in-decls,
+  -readability-braces-around-controls,
+  -readability-braces-around-statements,
+  -readability-convert-member-functions-to-static,
+  -readability-function-cognitive-complexity,
+  -readability-identifier-length,
+  -readability-identifier-naming,
+  -readability-inconsistent-declaration-parameter-name,
+  -readability-magic-numbers,
+  -readability-redundant-access-specifiers,
+  portability-*
+
+# Only warn inside project sources/headers, not in Qt system headers or the
+# build tree (MOC-generated code is exempt from style rules).
+HeaderFilterRegex: 'doob/(tests/)?[^/]+\\.(h|cpp)$'
+
+# Advisory: the tool reports warnings, the gate is the commit review.
+WarningsAsErrors: ''

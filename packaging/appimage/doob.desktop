@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=doob
+Comment=Modular desktop audio player
+Exec=doob
+Icon=doob
+Type=Application
+Categories=Audio;Player;AudioVideo;

@@ -1,0 +1,615 @@
+{
+    "container": {
+        "containers": [
+            {
+                "containers": [
+                    {
+                        "name": "menubutton-19",
+                        "type": "menubutton"
+                    },
+                    {
+                        "name": "titlebar-18",
+                        "type": "titlebar"
+                    }
+                ],
+                "orientation": 1,
+                "state": "AAAA/wAAAAEAAAACAAAAVAAAB1kA/////wEAAAABAA==",
+                "type": "splitter"
+            },
+            {
+                "containers": [
+                    {
+                        "columns": {
+                            "hidden": [
+                                "artwork",
+                                "albumartist",
+                                "composer",
+                                "genre",
+                                "comment",
+                                "bitrate",
+                                "samplerate",
+                                "channels"
+                            ],
+                            "order": [
+                                "artwork",
+                                "title",
+                                "artist",
+                                "album",
+                                "albumartist",
+                                "composer",
+                                "genre",
+                                "track",
+                                "disc",
+                                "year",
+                                "duration",
+                                "comment",
+                                "bitrate",
+                                "samplerate",
+                                "channels"
+                            ],
+                            "widths": {
+                                "album": 100,
+                                "albumartist": 0,
+                                "artist": 100,
+                                "artwork": 100,
+                                "bitrate": 0,
+                                "channels": 0,
+                                "comment": 0,
+                                "composer": 0,
+                                "disc": 100,
+                                "duration": 100,
+                                "genre": 0,
+                                "samplerate": 0,
+                                "title": 100,
+                                "track": 100,
+                                "year": 100
+                            }
+                        },
+                        "type": "library",
+                        "view": "artistalbum"
+                    },
+                    {
+                        "current": 0,
+                        "type": "playlists",
+                        "views": {
+                            "1": {
+                                "hidden": [
+                                    "artwork",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "order": [
+                                    "playing",
+                                    "artwork",
+                                    "title",
+                                    "artist",
+                                    "album",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "track",
+                                    "disc",
+                                    "year",
+                                    "duration",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "widths": {
+                                    "album": 100,
+                                    "albumartist": 0,
+                                    "artist": 100,
+                                    "artwork": 100,
+                                    "bitrate": 0,
+                                    "channels": 0,
+                                    "comment": 0,
+                                    "composer": 0,
+                                    "disc": 100,
+                                    "duration": 100,
+                                    "genre": 0,
+                                    "playing": 100,
+                                    "samplerate": 0,
+                                    "title": 100,
+                                    "track": 100,
+                                    "year": 100
+                                }
+                            },
+                            "10": {
+                                "hidden": [
+                                    "artwork",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "order": [
+                                    "playing",
+                                    "artwork",
+                                    "title",
+                                    "artist",
+                                    "album",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "track",
+                                    "disc",
+                                    "year",
+                                    "duration",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "widths": {
+                                    "album": 100,
+                                    "albumartist": 0,
+                                    "artist": 100,
+                                    "artwork": 100,
+                                    "bitrate": 0,
+                                    "channels": 0,
+                                    "comment": 0,
+                                    "composer": 0,
+                                    "disc": 100,
+                                    "duration": 100,
+                                    "genre": 0,
+                                    "playing": 100,
+                                    "samplerate": 0,
+                                    "title": 100,
+                                    "track": 100,
+                                    "year": 100
+                                }
+                            },
+                            "2": {
+                                "hidden": [
+                                    "artwork",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "order": [
+                                    "playing",
+                                    "artwork",
+                                    "title",
+                                    "artist",
+                                    "album",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "track",
+                                    "disc",
+                                    "year",
+                                    "duration",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "widths": {
+                                    "album": 100,
+                                    "albumartist": 0,
+                                    "artist": 100,
+                                    "artwork": 100,
+                                    "bitrate": 0,
+                                    "channels": 0,
+                                    "comment": 0,
+                                    "composer": 0,
+                                    "disc": 100,
+                                    "duration": 100,
+                                    "genre": 0,
+                                    "playing": 100,
+                                    "samplerate": 0,
+                                    "title": 468,
+                                    "track": 100,
+                                    "year": 100
+                                }
+                            },
+                            "3": {
+                                "hidden": [
+                                    "artwork",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "order": [
+                                    "playing",
+                                    "artwork",
+                                    "title",
+                                    "artist",
+                                    "album",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "track",
+                                    "disc",
+                                    "year",
+                                    "duration",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "widths": {
+                                    "album": 100,
+                                    "albumartist": 0,
+                                    "artist": 100,
+                                    "artwork": 100,
+                                    "bitrate": 0,
+                                    "channels": 0,
+                                    "comment": 0,
+                                    "composer": 0,
+                                    "disc": 100,
+                                    "duration": 100,
+                                    "genre": 0,
+                                    "playing": 100,
+                                    "samplerate": 0,
+                                    "title": 100,
+                                    "track": 100,
+                                    "year": 100
+                                }
+                            },
+                            "4": {
+                                "hidden": [
+                                    "artwork",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "order": [
+                                    "playing",
+                                    "artwork",
+                                    "title",
+                                    "artist",
+                                    "album",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "track",
+                                    "disc",
+                                    "year",
+                                    "duration",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "widths": {
+                                    "album": 100,
+                                    "albumartist": 0,
+                                    "artist": 100,
+                                    "artwork": 100,
+                                    "bitrate": 0,
+                                    "channels": 0,
+                                    "comment": 0,
+                                    "composer": 0,
+                                    "disc": 100,
+                                    "duration": 100,
+                                    "genre": 0,
+                                    "playing": 100,
+                                    "samplerate": 0,
+                                    "title": 100,
+                                    "track": 100,
+                                    "year": 100
+                                }
+                            },
+                            "5": {
+                                "hidden": [
+                                    "artwork",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "order": [
+                                    "playing",
+                                    "artwork",
+                                    "title",
+                                    "artist",
+                                    "album",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "track",
+                                    "disc",
+                                    "year",
+                                    "duration",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "widths": {
+                                    "album": 100,
+                                    "albumartist": 0,
+                                    "artist": 100,
+                                    "artwork": 100,
+                                    "bitrate": 0,
+                                    "channels": 0,
+                                    "comment": 0,
+                                    "composer": 0,
+                                    "disc": 100,
+                                    "duration": 100,
+                                    "genre": 0,
+                                    "playing": 100,
+                                    "samplerate": 0,
+                                    "title": 100,
+                                    "track": 100,
+                                    "year": 100
+                                }
+                            },
+                            "6": {
+                                "hidden": [
+                                    "artwork",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "order": [
+                                    "playing",
+                                    "artwork",
+                                    "title",
+                                    "artist",
+                                    "album",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "track",
+                                    "disc",
+                                    "year",
+                                    "duration",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "widths": {
+                                    "album": 100,
+                                    "albumartist": 0,
+                                    "artist": 100,
+                                    "artwork": 100,
+                                    "bitrate": 0,
+                                    "channels": 0,
+                                    "comment": 0,
+                                    "composer": 0,
+                                    "disc": 100,
+                                    "duration": 100,
+                                    "genre": 0,
+                                    "playing": 100,
+                                    "samplerate": 0,
+                                    "title": 100,
+                                    "track": 100,
+                                    "year": 100
+                                }
+                            },
+                            "7": {
+                                "hidden": [
+                                    "artwork",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "order": [
+                                    "playing",
+                                    "artwork",
+                                    "title",
+                                    "artist",
+                                    "album",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "track",
+                                    "disc",
+                                    "year",
+                                    "duration",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "widths": {
+                                    "album": 100,
+                                    "albumartist": 0,
+                                    "artist": 100,
+                                    "artwork": 100,
+                                    "bitrate": 0,
+                                    "channels": 0,
+                                    "comment": 0,
+                                    "composer": 0,
+                                    "disc": 100,
+                                    "duration": 100,
+                                    "genre": 0,
+                                    "playing": 100,
+                                    "samplerate": 0,
+                                    "title": 100,
+                                    "track": 100,
+                                    "year": 100
+                                }
+                            },
+                            "8": {
+                                "hidden": [
+                                    "artwork",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "order": [
+                                    "playing",
+                                    "artwork",
+                                    "title",
+                                    "artist",
+                                    "album",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "track",
+                                    "disc",
+                                    "year",
+                                    "duration",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "widths": {
+                                    "album": 100,
+                                    "albumartist": 0,
+                                    "artist": 100,
+                                    "artwork": 100,
+                                    "bitrate": 0,
+                                    "channels": 0,
+                                    "comment": 0,
+                                    "composer": 0,
+                                    "disc": 100,
+                                    "duration": 100,
+                                    "genre": 0,
+                                    "playing": 100,
+                                    "samplerate": 0,
+                                    "title": 100,
+                                    "track": 100,
+                                    "year": 100
+                                }
+                            },
+                            "9": {
+                                "hidden": [
+                                    "artwork",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "order": [
+                                    "playing",
+                                    "artwork",
+                                    "title",
+                                    "artist",
+                                    "album",
+                                    "albumartist",
+                                    "composer",
+                                    "genre",
+                                    "track",
+                                    "disc",
+                                    "year",
+                                    "duration",
+                                    "comment",
+                                    "bitrate",
+                                    "samplerate",
+                                    "channels"
+                                ],
+                                "widths": {
+                                    "album": 293,
+                                    "albumartist": 0,
+                                    "artist": 178,
+                                    "artwork": 100,
+                                    "bitrate": 0,
+                                    "channels": 0,
+                                    "comment": 0,
+                                    "composer": 0,
+                                    "disc": 100,
+                                    "duration": 100,
+                                    "genre": 0,
+                                    "playing": 100,
+                                    "samplerate": 0,
+                                    "title": 100,
+                                    "track": 100,
+                                    "year": 100
+                                }
+                            }
+                        }
+                    }
+                ],
+                "orientation": 1,
+                "state": "AAAA/wAAAAEAAAACAAABVwAAA6cA/////wEAAAABAA==",
+                "type": "splitter"
+            },
+            {
+                "containers": [
+                    {
+                        "bands": 8,
+                        "type": "spectrum"
+                    },
+                    {
+                        "containers": [
+                            {
+                                "type": "position"
+                            },
+                            {
+                                "buttons": [
+                                    "previous",
+                                    "playpause",
+                                    "stop",
+                                    "next",
+                                    "shuffle",
+                                    "repeat"
+                                ],
+                                "stretchHorizontal": false,
+                                "stretchVertical": false,
+                                "type": "controls"
+                            },
+                            {
+                                "type": "volume"
+                            }
+                        ],
+                        "orientation": 1,
+                        "state": "AAAA/wAAAAEAAAADAAAE2gAAAQIAAAC0AP////8BAAAAAQA=",
+                        "type": "splitter"
+                    }
+                ],
+                "orientation": 1,
+                "state": "AAAA/wAAAAEAAAACAAAAUwAAAfEA/////wEAAAABAA==",
+                "type": "splitter"
+            }
+        ],
+        "orientation": 2,
+        "state": "AAAA/wAAAAEAAAADAAAAIAAAAvkAAAAYAP////8BAAAAAgA=",
+        "type": "splitter"
+    },
+    "origin": "preset:Kiosk",
+    "version": 1,
+    "window": {
+        "frameless": true,
+        "height": 823,
+        "maximized": false,
+        "menu_bar": false,
+        "width": 1426,
+        "x": 1920,
+        "y": 0
+    }
+}

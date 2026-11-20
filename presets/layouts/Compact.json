@@ -1,0 +1,208 @@
+{
+    "container": {
+        "containers": [
+            {
+                "containers": [
+                    {
+                        "bands": 8,
+                        "type": "spectrum"
+                    },
+                    {
+                        "containers": [
+                            {
+                                "type": "tracklabel"
+                            },
+                            {
+                                "containers": [
+                                    {
+                                        "type": "volume"
+                                    },
+                                    {
+                                        "caption": "Playlist",
+                                        "type": "windowtoggle",
+                                        "window_id": "window-1"
+                                    },
+                                    {
+                                        "caption": "Library",
+                                        "type": "windowtoggle",
+                                        "window_id": "window-2"
+                                    },
+                                    {
+                                        "caption": "Equalizer",
+                                        "type": "windowtoggle",
+                                        "window_id": "window-3"
+                                    },
+                                    {
+                                        "name": "menubutton-20",
+                                        "type": "menubutton"
+                                    }
+                                ],
+                                "orientation": 1,
+                                "state": "AAAA/wAAAAEAAAAFAAAAzAAAAEMAAAA9AAAAGAAAAAsA/////wEAAAABAA==",
+                                "type": "splitter"
+                            }
+                        ],
+                        "orientation": 2,
+                        "state": "AAAA/wAAAAEAAAACAAAAHwAAACkA/////wEAAAACAA==",
+                        "type": "splitter"
+                    }
+                ],
+                "orientation": 1,
+                "state": "AAAA/wAAAAEAAAACAAAAkwAAAeMA/////wEAAAABAA==",
+                "type": "splitter"
+            },
+            {
+                "type": "position"
+            },
+            {
+                "buttons": [
+                    "previous",
+                    "playpause",
+                    "stop",
+                    "next",
+                    "stretch",
+                    "shuffle",
+                    "repeat"
+                ],
+                "stretchVertical": false,
+                "type": "controls"
+            }
+        ],
+        "orientation": 2,
+        "state": "AAAA/wAAAAEAAAADAAAATAAAACUAAAAfAP////8BAAAAAgA=",
+        "type": "splitter"
+    },
+    "version": 1,
+    "window": {
+        "dock_state": "AAAA/wAAAAD9AAAAAQAAAAIAAAFWAAAASPwBAAAAA/sAAAAQAHcAaQBuAGQAbwB3AC0AMQoAAAZM////CwAAAcMAAAE9+wAAABAAdwBpAG4AZABvAHcALQAyCgAAB4D////+AAACowAAAU77AAAAEAB3AGkAbgBkAG8AdwAtADMKAAAILAAAAAAAAAFiAAAAuAAAAfIAAACWAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAqAGYAYQBsAGwAYgBhAGMAawBUAGkAdABsAGUAUwB0AHIAaQBwAEIAYQByAAAAAAD/////AAAAAAAAAAA=",
+        "height": 150,
+        "maximized": false,
+        "menu_bar": false,
+        "width": 498,
+        "x": 1920,
+        "y": 0
+    },
+    "windows": [
+        {
+            "container": {
+                "columns": {
+                    "hidden": [
+                        "artwork",
+                        "albumartist",
+                        "composer",
+                        "genre",
+                        "comment",
+                        "bitrate",
+                        "samplerate",
+                        "channels"
+                    ],
+                    "order": [
+                        "playing",
+                        "artwork",
+                        "title",
+                        "artist",
+                        "album",
+                        "albumartist",
+                        "composer",
+                        "genre",
+                        "track",
+                        "disc",
+                        "year",
+                        "duration",
+                        "comment",
+                        "bitrate",
+                        "samplerate",
+                        "channels"
+                    ],
+                    "widths": {
+                        "album": 100,
+                        "albumartist": 0,
+                        "artist": 100,
+                        "artwork": 100,
+                        "bitrate": 0,
+                        "channels": 0,
+                        "comment": 0,
+                        "composer": 0,
+                        "disc": 100,
+                        "duration": 100,
+                        "genre": 0,
+                        "playing": 100,
+                        "samplerate": 0,
+                        "title": 100,
+                        "track": 100,
+                        "year": 100
+                    }
+                },
+                "type": "playlist"
+            },
+            "id": "window-1",
+            "kind": "docked",
+            "title": "Playlist",
+            "visible": false
+        },
+        {
+            "container": {
+                "columns": {
+                    "hidden": [
+                        "artwork",
+                        "albumartist",
+                        "composer",
+                        "genre",
+                        "comment",
+                        "bitrate",
+                        "samplerate",
+                        "channels"
+                    ],
+                    "order": [
+                        "artwork",
+                        "title",
+                        "artist",
+                        "album",
+                        "albumartist",
+                        "composer",
+                        "genre",
+                        "track",
+                        "disc",
+                        "year",
+                        "duration",
+                        "comment",
+                        "bitrate",
+                        "samplerate",
+                        "channels"
+                    ],
+                    "widths": {
+                        "album": 100,
+                        "albumartist": 0,
+                        "artist": 100,
+                        "artwork": 100,
+                        "bitrate": 0,
+                        "channels": 0,
+                        "comment": 0,
+                        "composer": 0,
+                        "disc": 100,
+                        "duration": 100,
+                        "genre": 0,
+                        "samplerate": 0,
+                        "title": 100,
+                        "track": 100,
+                        "year": 100
+                    }
+                },
+                "type": "library"
+            },
+            "id": "window-2",
+            "kind": "docked",
+            "title": "Library",
+            "visible": false
+        },
+        {
+            "container": {
+                "type": "equalizer"
+            },
+            "id": "window-3",
+            "kind": "docked",
+            "title": "Equalizer",
+            "visible": false
+        }
+    ]
+}

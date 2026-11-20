@@ -1,0 +1,341 @@
+/*
+ * "Dawn" — a warm light look with rounded edges: paper-toned
+ * surfaces, slate text, a dusty blue accent, and soft corners on
+ * every interactive part. The visualization widgets' colors derive
+ * from the palette roles, so no "x-" paint parameters are needed.
+ */
+
+QWidget {
+    background-color: #f6f3ec;
+    color: #34313b;
+    selection-background-color: #4a7fa5;
+    selection-color: #f6f3ec;
+    alternate-background-color: #efece2;
+    outline: 0;
+}
+
+QTableView,
+QTreeView,
+QListView {
+    background-color: #fffdf8;
+}
+
+QGroupBox {
+    border: 1px solid #d9d3c4;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 4px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #d9d3c4;
+    border-radius: 8px;
+}
+
+QTabBar::tab {
+    background: #ece8dd;
+    color: #6b6675;
+    border: 1px solid #d9d3c4;
+    border-bottom: none;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding: 4px 10px;
+    margin: 0 1px;
+}
+
+QTabBar::tab:selected {
+    background: #fffdf8;
+    color: #34313b;
+}
+
+QTabBar::tab:hover:!selected {
+    background: #f3f0e7;
+    color: #4a4653;
+}
+
+QMenuBar {
+    background-color: #f6f3ec;
+}
+
+QMenuBar::item {
+    background: transparent;
+    border-radius: 4px;
+    padding: 3px 8px;
+}
+
+QMenuBar::item:selected,
+QMenuBar::item:hover {
+    background: #ece8dd;
+    color: #34313b;
+}
+
+QMenu {
+    background-color: #fbf9f3;
+    border: 1px solid #d9d3c4;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+QMenu::item {
+    border-radius: 4px;
+    padding: 3px 24px;
+}
+
+QMenu::item:selected {
+    background: #4a7fa5;
+    color: #f6f3ec;
+}
+
+QMenu::item:disabled {
+    color: #a09a8c;
+}
+
+QMenu::separator {
+    height: 1px;
+    background: #d9d3c4;
+    margin: 4px 8px;
+}
+
+QLineEdit,
+QSpinBox,
+QDoubleSpinBox,
+QComboBox {
+    background-color: #fffdf8;
+    border: 1px solid #d9d3c4;
+    border-radius: 6px;
+    padding: 3px 6px;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 20px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #fbf9f3;
+    border: 1px solid #d9d3c4;
+    border-radius: 6px;
+    selection-background-color: #4a7fa5;
+    selection-color: #f6f3ec;
+}
+
+QPushButton,
+QToolButton {
+    background-color: #ece8dd;
+    border: 1px solid #d9d3c4;
+    border-radius: 6px;
+    padding: 4px 12px;
+    min-height: 0;
+}
+
+QPushButton:hover,
+QToolButton:hover {
+    background-color: #f3f0e7;
+    border-color: #c4bda9;
+}
+
+QPushButton:pressed,
+QToolButton:pressed {
+    background-color: #e2ddcf;
+}
+
+QPushButton:checked,
+QToolButton:checked {
+    background-color: #dbe6ee;
+    border-color: #4a7fa5;
+    color: #2c516d;
+}
+
+QPushButton:disabled,
+QToolButton:disabled {
+    color: #a09a8c;
+    border-color: #e2ddcf;
+}
+
+QCheckBox::indicator,
+QRadioButton::indicator {
+    width: 14px;
+    height: 14px;
+    background: #fffdf8;
+    border: 1px solid #c4bda9;
+}
+
+QCheckBox::indicator {
+    border-radius: 4px;
+}
+
+QRadioButton::indicator {
+    border-radius: 7px;
+}
+
+QCheckBox::indicator:checked,
+QRadioButton::indicator:checked {
+    background: #4a7fa5;
+    border-color: #4a7fa5;
+}
+
+QAbstractItemView::item {
+    border-radius: 4px;
+    margin: 1px 2px;
+}
+
+QAbstractItemView::item:selected {
+    background-color: #4a7fa5;
+    color: #f6f3ec;
+}
+
+QAbstractItemView::item:hover:!selected {
+    background-color: #ece8dd;
+}
+
+QHeaderView::section {
+    background-color: #ece8dd;
+    color: #6b6675;
+    border: none;
+    border-right: 1px solid #d9d3c4;
+    border-bottom: 1px solid #d9d3c4;
+    padding: 3px 6px;
+}
+
+QStatusBar {
+    background-color: #f6f3ec;
+    border-top: 1px solid #d9d3c4;
+}
+
+QStatusBar QLabel {
+    background: transparent;
+}
+
+QDockWidget::title {
+    background: #ece8dd;
+    border: 1px solid #d9d3c4;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+QSplitter::handle:horizontal {
+    background: #d9d3c4;
+    width: 3px;
+}
+
+QSplitter::handle:vertical {
+    background: #d9d3c4;
+    height: 3px;
+}
+
+QScrollBar:vertical {
+    background: #f6f3ec;
+    width: 10px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #d9d3c4;
+    border-radius: 5px;
+    min-height: 24px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #c4bda9;
+}
+
+QScrollBar:horizontal {
+    background: #f6f3ec;
+    height: 10px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: #d9d3c4;
+    border-radius: 5px;
+    min-width: 24px;
+    margin: 2px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #c4bda9;
+}
+
+QScrollBar::add-line,
+QScrollBar::sub-line {
+    width: 0;
+    height: 0;
+}
+
+QScrollBar::add-page,
+QScrollBar::sub-page {
+    background: transparent;
+}
+
+QSlider::groove:horizontal {
+    background: #d9d3c4;
+    height: 4px;
+    border-radius: 2px;
+}
+
+QSlider::sub-page:horizontal {
+    background: #4a7fa5;
+    height: 4px;
+    border-radius: 2px;
+}
+
+QSlider::handle:horizontal {
+    background: #34313b;
+    width: 12px;
+    margin: -5px 0;
+    border-radius: 6px;
+}
+
+QSlider::groove:vertical {
+    background: #d9d3c4;
+    width: 4px;
+    border-radius: 2px;
+}
+
+/* Flipped from the horizontal: the vertical sliders (the EQ bands)
+   fill *above* the handle — the boost direction — so the accent goes
+   to add-page and the dim to sub-page. */
+QSlider::sub-page:vertical {
+    background: #d9d3c4;
+    width: 4px;
+}
+
+QSlider::add-page:vertical {
+    background: #4a7fa5;
+    width: 4px;
+    border-radius: 2px;
+}
+
+QSlider::handle:vertical {
+    background: #34313b;
+    height: 12px;
+    margin: 0 -5px;
+    border-radius: 6px;
+}
+
+QProgressBar {
+    background: #ece8dd;
+    border: 1px solid #d9d3c4;
+    border-radius: 6px;
+    text-align: center;
+    color: #34313b;
+}
+
+QProgressBar::chunk {
+    background: #4a7fa5;
+    border-radius: 5px;
+}
+
+QToolTip {
+    background-color: #fbf9f3;
+    color: #34313b;
+    border: 1px solid #c4bda9;
+    border-radius: 4px;
+    padding: 3px 6px;
+}

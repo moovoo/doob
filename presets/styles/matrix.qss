@@ -1,0 +1,169 @@
+/*
+ * "Matrix" — a green-on-black phosphor look.
+ *
+ * Qt QSS color properties (background / color) resolve into palette
+ * roles, which the custom-painted widgets pick up through
+ * BaseWidget::styleColor; the "x-" declarations below are doob's own
+ * paint parameters for the visualization widgets (Qt warns
+ * "Unknown property" for them — expected).
+ */
+
+QWidget {
+    background-color: #000000;
+    color: #00ff66;
+    selection-background-color: #00ff66;
+    selection-color: #000000;
+    alternate-background-color: #001a0d;
+}
+
+QMainWindow,
+QDockWidget,
+QToolBar {
+    background-color: #000000;
+}
+
+QTabWidget::pane {
+    border: 1px solid #005522;
+}
+
+QTabBar::tab {
+    background: #001a0d;
+    color: #00cc52;
+    border: 1px solid #00441c;
+    padding: 4px 10px;
+}
+
+QTabBar::tab:selected {
+    background: #002b14;
+    color: #00ff66;
+}
+
+QToolTip {
+    background-color: #002b14;
+    color: #00ff66;
+    border: 1px solid #00ff66;
+}
+
+QMenu,
+QComboBox {
+    background-color: #001a0d;
+    color: #00ff66;
+    border: 1px solid #005522;
+}
+
+QMenu::item:selected,
+QComboBox QAbstractItemView::item:selected,
+QListView::item:selected,
+QTreeView::item:selected,
+QTableView::item:selected {
+    background-color: #00ff66;
+    color: #000000;
+}
+
+QHeaderView::section {
+    background-color: #002b14;
+    color: #00ff66;
+    border: 1px solid #00441c;
+    padding: 2px;
+}
+
+QStatusBar {
+    background-color: #001a0d;
+    border-top: 1px solid #00441c;
+}
+
+QScrollBar:vertical {
+    background: #000000;
+    width: 10px;
+}
+
+QScrollBar::handle:vertical {
+    background: #005522;
+    min-height: 20px;
+}
+
+QScrollBar:horizontal {
+    background: #000000;
+    height: 10px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #005522;
+    min-width: 20px;
+}
+
+QScrollBar::add-line,
+QScrollBar::sub-line {
+    height: 0;
+    width: 0;
+}
+
+/* The transport strip: the playback control buttons glow. */
+QPushButton#playPauseButton,
+QPushButton#previousButton,
+QPushButton#nextButton,
+QPushButton#stopButton {
+    background-color: #002b14;
+    color: #00ff66;
+    border: 1px solid #00ff66;
+    padding: 3px;
+}
+
+QPushButton#playPauseButton:hover {
+    background-color: #00ff66;
+    color: #000000;
+}
+
+/* Orientation-agnostic: the EQ's band sliders are vertical, the
+   position/volume sliders horizontal. */
+QSlider::groove:horizontal {
+    background: #002b14;
+    height: 4px;
+}
+
+QSlider::sub-page:horizontal {
+    background: #00ff66;
+    height: 4px;
+}
+
+QSlider::handle:horizontal {
+    background: #00ff66;
+    width: 10px;
+    margin: -4px 0;
+}
+
+QSlider::groove:vertical {
+    background: #002b14;
+    width: 4px;
+}
+
+/* Flipped from the horizontal: the vertical sliders (the EQ bands)
+   fill *above* the handle — the boost direction — so the green goes
+   to add-page and the dim to sub-page (QSS's vertical sub-page is the
+   handle-to-minimum side, i.e. below). */
+QSlider::sub-page:vertical {
+    background: #002b14;
+    width: 4px;
+}
+
+QSlider::add-page:vertical {
+    background: #00ff66;
+    width: 4px;
+}
+
+QSlider::handle:vertical {
+    background: #00ff66;
+    height: 10px;
+    margin: 0 -4px;
+}
+
+/* The visualization widgets' paint parameters (doob "x-" properties). */
+#oscillogram {
+    x-line-width: 1;
+    x-box-size: 3px;
+    x-box-color-off: #003316;
+}
+
+#peakmeter {
+    x-segments: 16;
+}

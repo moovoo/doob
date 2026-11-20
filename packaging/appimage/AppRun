@@ -1,0 +1,21 @@
+#!/bin/sh
+# doob's AppImage launcher.
+DIR="$(dirname "$(readlink -f "$0")")"
+
+# --portable: keep doob's data (database, settings, layouts, styles)
+# next to the AppImage — doob resolves its data dir from
+# DOOB_DATA_DIR before QStandardPaths.
+if [ "$1" = "--portable" ]; then
+    export DOOB_DATA_DIR="$DIR/.doob"
+    shift
+fi
+
+# Everything the image links against (libdoob_lib, the plugin .so's,
+# TagLib, FFmpeg, Pulse, the bundled Qt) lives in usr/lib.
+export LD_LIBRARY_PATH="$DIR/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
+# The plugins live in usr/plugins (not next to the binary, where doob
+# looks by default) — point the search at them.
+export DOOB_PLUGIN_DIR="$DIR/usr/plugins"
+
+exec "$DIR/usr/bin/doob" "$@"

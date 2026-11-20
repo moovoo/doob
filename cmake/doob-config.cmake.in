@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+# The Qt components doob_lib's public headers use (the interface link of
+# doob::doob_lib references them; find them before including the targets).
+find_package(Qt@QT_VERSION_MAJOR@ REQUIRED COMPONENTS Widgets Sql Multimedia Network DBus)
+
+include("${CMAKE_CURRENT_LIST_DIR}/doobTargets.cmake")
+
+check_required_components(doob)

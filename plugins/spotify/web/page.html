@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Spotify (doob)</title>
+<style>
+  body { font-family: sans-serif; margin: 12px; color: #111; }
+  #status { font-weight: bold; margin: 6px 0; }
+  #log { background: #f4f4f4; border: 1px solid #ddd; padding: 8px;
+         height: 120px; overflow-y: auto; font-family: monospace;
+         font-size: 12px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+  <div id="status">loading the SDK&hellip;</div>
+  <div id="log"></div>
+
+  <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+  <script src="qrc:/spotify/sdk.js"></script>
+  <script>
+    // The engine lives in an sdk.scdn.co iframe the wrapper talks to
+    // through postMessage; mirror its topics (the wrapper only exposes
+    // a few of them as player events).
+    window.addEventListener('message', (e) => {
+      const d = e.data;
+      if (d && d.type === 'SP_MESSAGE' && d.body && d.body.topic)
+        console.log('[engine] ' + d.body.topic + ' '
+            + JSON.stringify(d.body.data || {}).slice(0, 300));
+    });
+  </script>
+  <script>
+    const statusEl = document.getElementById('status');
+    const logEl = document.getElementById('log');
+    function log(msg) {
+      logEl.textContent += msg + '\n';
+      logEl.scrollTop = logEl.scrollHeight;
+      // The console is the driver's window into the page (the log
+      // element lives in a process the driver never sees).
+      console.log(msg);
+    }
+    function setStatus(text) { statusEl.textContent = text; }
+
+    let player = null;
+    let pendingTokenCb = null;
+    // The state object's shape varies by SDK version (v1.10.0 dropped
+    // window_title — the track lives under track_window.current_track).
+    function stateTitle(state) {
+      const t = state.track_window && state.track_window.current_track;
+      return (t && (t.name || t.title))
+          || state.window_title || state.title || '';
+    }
+
+    new QWebChannel(qt.webChannelTransport, (channel) => {
+      window.spotifyBridge = channel.objects.spotifyBridge;
+      log('web channel ready');
+    });
+
+    // The SDK asks for a token on connect (and on expiry): always ask
+    // the C++ side — it is the authority (a refresh or a re-login may
+    // have replaced the token since the last delivery, and the page
+    // keeps no copy of its own).
+    window.spotifyGetToken = (cb) => {
+      pendingTokenCb = cb;
+      log('requesting token from the C++ side…');
+      window.spotifyBridge.requestToken();
+    };
+    window.spotifyTokenDelivered = (token) => {
+      log('token received');
+      if (pendingTokenCb) {
+        const cb = pendingTokenCb;
+        pendingTokenCb = null;
+        cb(token);
+      }
+    };
+
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      player = new Spotify.Player({
+        name: 'doob',
+        getOAuthToken: window.spotifyGetToken,
+        volume: 1.0
+      });
+
+      player.addListener('ready', (data) => {
+        setStatus('ready — device ' + data.device_id);
+        log('ready: ' + data.device_id);
+        window.spotifyBridge.reportReady(data.device_id);
+      });
+
+      player.addListener('not_ready', () => {
+        setStatus('not ready');
+        window.spotifyBridge.reportNotReady();
+      });
+
+      let lastDuration = 0;
+      player.addListener('player_state_changed', (state) => {
+        if (!state) {
+          setStatus('stopped');
+          window.spotifyBridge.reportState('null');
+          return;
+        }
+        if (state.duration > 0)
+          lastDuration = state.duration;
+        setStatus((state.paused ? 'paused — ' : 'playing — ')
+                  + stateTitle(state));
+        window.spotifyBridge.reportState(JSON.stringify({
+          paused: state.paused,
+          position: state.position,
+          duration: state.duration,
+          title: stateTitle(state),
+          context: state.context ? state.context.uri : ''
+        }));
+        // The state carries the position and the duration: the C++ side
+        // follows it (the PROGRESS events below fill the gaps between
+        // state changes).
+        window.spotifyBridge.reportPosition(state.position, state.duration);
+      });
+
+      // v1.10.0: the event is "playback_error" — listening for an
+      // unknown name throws inside the SDK's listener map.
+      // The errors ride back to the driver tagged with the listener's
+      // type: an authentication hiccup the engine recovers from (it
+      // re-asks for a token on every retry) is not a failure — the
+      // driver decides by the type.
+      player.addListener('playback_error', (err) => {
+        setStatus('error: ' + err.message);
+        log('player error: ' + JSON.stringify(err));
+        window.spotifyBridge.reportError(JSON.stringify({
+          type: 'playback',
+          ...err
+        }));
+      });
+
+      // A blocked AudioContext (the browser's autoplay policy) is the
+      // classic "connected, playing, silent" cause — surface it.
+      player.addListener('autoplay_failed', (info) => {
+        log('autoplay blocked: ' + JSON.stringify(info));
+        window.spotifyBridge.reportError(JSON.stringify({
+          type: 'autoplay',
+          message: 'autoplay blocked by the browser policy',
+          reason: JSON.stringify(info)
+        }));
+      });
+      player.addListener('initialization_error', (err) => {
+        log('initialization error: ' + JSON.stringify(err));
+        window.spotifyBridge.reportError(JSON.stringify({
+          type: 'initialization',
+          ...err
+        }));
+      });
+      // The engine's auth/account failures (a registration the
+      // backend rejected) — surfaced like the other errors.
+      player.addListener('authentication_error', (err) => {
+        log('authentication error: ' + JSON.stringify(err));
+        window.spotifyBridge.reportError(JSON.stringify({
+          type: 'authentication',
+          ...err
+        }));
+      });
+      player.addListener('account_error', (err) => {
+        log('account error: ' + JSON.stringify(err));
+        window.spotifyBridge.reportError(JSON.stringify({
+          type: 'account',
+          ...err
+        }));
+      });
+
+      // v1.10.0's periodic progress event: the position between state
+      // changes (the duration rides along from the last state).
+      player.addListener('progress', (p) => {
+        const pos = Number(p && (p.position ?? p.current_position));
+        const dur = Number(p && (p.duration ?? p.total_duration));
+        if (Number.isFinite(pos)) {
+          if (Number.isFinite(dur) && dur > 0)
+            lastDuration = dur;
+          window.spotifyBridge.reportPosition(pos, lastDuration);
+        }
+      });
+
+      log('connecting…');
+      player.connect()
+        .then(() => log('connected'))
+        .catch((e) => log('connect failed: ' + e));
+    };
+
+    // --- transport commands from the C++ side ------------------------
+    // v1.10.0 method names: resume() (no play()), seek(), pause(),
+    // setVolume(). Starting a specific track/context is the Web API's
+    // job (PUT /me/player/play) — the C++ side does that itself.
+    //
+    // connect/disconnect are the device's registration with Spotify
+    // Connect: connect() registers the device (a fresh device id each
+    // time — the ready event carries it, the play names it),
+    // disconnect() closes the session (the device drops out of
+    // Connect — nothing else can play through it). The SDK instance
+    // itself stays up across a disconnect: the AudioContext, the
+    // page and the private-server sink are warm, and a reconnect is
+    // a plain connect() again.
+    window.spotifyConnect = () => {
+      if (!player) return;
+      player.connect()
+        .then((ok) => {
+          log(ok ? 'connected' : 'connect failed');
+          window.spotifyBridge.reportConnectResult(!!ok);
+        })
+        .catch((e) => {
+          log('connect failed: ' + e);
+          window.spotifyBridge.reportConnectResult(false);
+        });
+    };
+    window.spotifyDisconnect = () => {
+      if (!player) return;
+      player.disconnect();
+      log('disconnected (the device left Connect)');
+    };
+    window.spotifyPause = () => {
+      if (!player) return;
+      player.pause().then(() => log('pause'))
+                    .catch((e) => log('pause failed: ' + e));
+    };
+    window.spotifyResume = () => {
+      if (!player) return;
+      player.resume().then(() => log('resume'))
+                     .catch((e) => log('resume failed: ' + e));
+    };
+    window.spotifySeek = (ms) => {
+      if (!player) return;
+      player.seek(ms).then(() => log('seek ' + ms))
+                     .catch((e) => log('seek failed: ' + e));
+    };
+    window.spotifySetVolume = (v) => {
+      if (!player) return;
+      player.setVolume(Math.max(0, Math.min(1, v)));
+    };
+  </script>
+</body>
+</html>

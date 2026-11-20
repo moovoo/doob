@@ -1,0 +1,142 @@
+/*
+ * "Compact" — a small-font, tight-spacing look: every part of the UI
+ * shrunk to the minimum useful size (fonts, paddings, margins,
+ * icon-free spacing). Colorless on purpose: the platform palette's
+ * colors are kept (only sizes are overridden), so it layers over a
+ * light or dark theme alike.
+ */
+
+QWidget {
+    font-size: 9pt;
+}
+
+QLabel {
+    margin: 0;
+    padding: 0;
+}
+
+QPushButton,
+QToolButton {
+    padding: 1px 4px;
+    margin: 0;
+    min-height: 0;
+    min-width: 0;
+}
+
+QToolBar {
+    spacing: 1px;
+    padding: 0;
+    margin: 0;
+}
+
+QMainWindow::separator {
+    width: 2px;
+    height: 2px;
+}
+
+QTabWidget::pane {
+    border: 1px solid palette(mid);
+}
+
+QTabBar::tab {
+    padding: 1px 6px;
+    margin: 0;
+}
+
+QMenu,
+QComboBox,
+QSpinBox,
+QDoubleSpinBox,
+QLineEdit {
+    padding: 1px 2px;
+    margin: 0;
+}
+
+QMenu::item {
+    padding: 1px 20px;
+}
+
+/* The menu bar: hover/selected highlights (the platform style's
+   QMenuBar::item selectors are sparse). */
+QMenuBar::item {
+    background: transparent;
+    padding: 1px 4px;
+    margin: 0;
+}
+
+QMenuBar::item:selected,
+QMenuBar::item:hover {
+    background: palette(highlight);
+    color: palette(highlighted-text);
+}
+
+QHeaderView::section {
+    padding: 0 2px;
+    height: 16px;
+}
+
+
+QTableView,
+QTreeView,
+QListView {
+    show-decoration-selected: 1;
+}
+
+QTableView::item,
+QTreeView::item,
+QListView::item {
+    padding: 0;
+}
+
+QStatusBar {
+    min-height: 16px;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+}
+
+QScrollBar:horizontal {
+    height: 8px;
+}
+
+QScrollBar::handle:vertical {
+    min-height: 16px;
+}
+
+QScrollBar::handle:horizontal {
+    min-width: 16px;
+}
+
+QScrollBar::add-line,
+QScrollBar::sub-line {
+    height: 0;
+    width: 0;
+}
+
+QSlider::groove:horizontal {
+    height: 3px;
+}
+
+QSlider::sub-page:horizontal {
+    height: 3px;
+}
+
+QSlider::handle:horizontal {
+    width: 8px;
+    margin: -3px 0;
+}
+
+QSlider::groove:vertical {
+    width: 3px;
+}
+
+QSlider::handle:vertical {
+    height: 8px;
+    margin: 0 -3px;
+}
+
+QToolTip {
+    margin: 0;
+    padding: 1px;
+}

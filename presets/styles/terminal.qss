@@ -1,0 +1,330 @@
+/*
+ * "Terminal" — a small monospace, sharp-cornered look: warm
+ * off-white on near-black, square geometry, and a font stack that
+ * prefers pixel fonts (Px437, Munro, Press Start 2P, Monocraft)
+ * when one is installed and falls back to a regular monospace
+ * otherwise. The "x-" declarations at the bottom are doob's own
+ * paint parameters for the visualization widgets (Qt warns
+ * "Unknown property" for them — expected).
+ */
+
+QWidget {
+    font-family: "Px437", "Munro", "Press Start 2P", "Monocraft",
+                 "JetBrains Mono", "Hack", "DejaVu Sans Mono",
+                 "Noto Sans Mono", monospace;
+    font-size: 10px;
+    background-color: #161513;
+    color: #d6d2c6;
+    selection-background-color: #d6d2c6;
+    selection-color: #161513;
+    alternate-background-color: #1c1b18;
+    outline: 0;
+}
+
+QTableView,
+QTreeView,
+QListView {
+    background-color: #1c1b18;
+}
+
+QGroupBox {
+    border: 1px solid #33312c;
+    margin-top: 10px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 8px;
+    padding: 0 4px;
+}
+
+QTabWidget::pane {
+    border: 1px solid #33312c;
+}
+
+QTabBar::tab {
+    background: #1c1b18;
+    color: #8a867c;
+    border: 1px solid #33312c;
+    border-bottom: none;
+    padding: 3px 8px;
+}
+
+QTabBar::tab:selected {
+    background: #26241f;
+    color: #d6d2c6;
+}
+
+QTabBar::tab:hover:!selected {
+    color: #b5b1a5;
+}
+
+QMenuBar {
+    background-color: #161513;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 3px 8px;
+}
+
+QMenuBar::item:selected,
+QMenuBar::item:hover {
+    background: #33312c;
+    color: #d6d2c6;
+}
+
+QMenu {
+    background-color: #1c1b18;
+    border: 1px solid #33312c;
+    padding: 2px;
+}
+
+QMenu::item {
+    padding: 3px 22px;
+}
+
+QMenu::item:selected {
+    background: #d6d2c6;
+    color: #161513;
+}
+
+QMenu::item:disabled {
+    color: #5c594f;
+}
+
+QMenu::separator {
+    height: 1px;
+    background: #33312c;
+    margin: 3px 6px;
+}
+
+QLineEdit,
+QSpinBox,
+QDoubleSpinBox,
+QComboBox {
+    background-color: #1c1b18;
+    border: 1px solid #33312c;
+    padding: 2px 4px;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 18px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #1c1b18;
+    border: 1px solid #33312c;
+    selection-background-color: #d6d2c6;
+    selection-color: #161513;
+}
+
+QPushButton,
+QToolButton {
+    background-color: #1c1b18;
+    border: 1px solid #33312c;
+    padding: 3px 8px;
+    min-height: 0;
+}
+
+QPushButton:hover,
+QToolButton:hover {
+    background-color: #26241f;
+    border-color: #4a473f;
+}
+
+QPushButton:pressed,
+QToolButton:pressed {
+    background-color: #2e2c26;
+}
+
+QPushButton:checked,
+QToolButton:checked {
+    background-color: #2e2c26;
+    border-color: #d6d2c6;
+    color: #d6d2c6;
+}
+
+QPushButton:disabled,
+QToolButton:disabled {
+    color: #5c594f;
+    border-color: #26241f;
+}
+
+QCheckBox::indicator,
+QRadioButton::indicator {
+    width: 12px;
+    height: 12px;
+    background: #1c1b18;
+    border: 1px solid #4a473f;
+}
+
+QCheckBox::indicator:checked,
+QRadioButton::indicator:checked {
+    background: #d6d2c6;
+    border-color: #d6d2c6;
+}
+
+QAbstractItemView::item {
+    margin: 0;
+}
+
+QAbstractItemView::item:selected {
+    background-color: #d6d2c6;
+    color: #161513;
+}
+
+QAbstractItemView::item:hover:!selected {
+    background-color: #26241f;
+}
+
+QHeaderView::section {
+    background-color: #1c1b18;
+    color: #8a867c;
+    border: none;
+    border-right: 1px solid #33312c;
+    border-bottom: 1px solid #33312c;
+    padding: 2px 4px;
+}
+
+QStatusBar {
+    background-color: #161513;
+    border-top: 1px solid #33312c;
+}
+
+QStatusBar QLabel {
+    background: transparent;
+}
+
+QDockWidget::title {
+    background: #1c1b18;
+    border: 1px solid #33312c;
+    padding: 3px 6px;
+}
+
+QSplitter::handle:horizontal {
+    background: #33312c;
+    width: 3px;
+}
+
+QSplitter::handle:vertical {
+    background: #33312c;
+    height: 3px;
+}
+
+QScrollBar:vertical {
+    background: #161513;
+    width: 10px;
+    margin: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #33312c;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #4a473f;
+}
+
+QScrollBar:horizontal {
+    background: #161513;
+    height: 10px;
+    margin: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: #33312c;
+    min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #4a473f;
+}
+
+QScrollBar::add-line,
+QScrollBar::sub-line {
+    width: 0;
+    height: 0;
+}
+
+QScrollBar::add-page,
+QScrollBar::sub-page {
+    background: transparent;
+}
+
+QSlider::groove:horizontal {
+    background: #33312c;
+    height: 4px;
+}
+
+QSlider::sub-page:horizontal {
+    background: #8a867c;
+    height: 4px;
+}
+
+QSlider::handle:horizontal {
+    background: #d6d2c6;
+    width: 10px;
+    margin: -4px 0;
+}
+
+QSlider::groove:vertical {
+    background: #33312c;
+    width: 4px;
+}
+
+/* Flipped from the horizontal: the vertical sliders (the EQ bands)
+   fill *above* the handle — the boost direction — so the lit side
+   goes to add-page and the dim to sub-page. */
+QSlider::sub-page:vertical {
+    background: #33312c;
+    width: 4px;
+}
+
+QSlider::add-page:vertical {
+    background: #8a867c;
+    width: 4px;
+}
+
+QSlider::handle:vertical {
+    background: #d6d2c6;
+    height: 10px;
+    margin: 0 -4px;
+}
+
+QProgressBar {
+    background: #1c1b18;
+    border: 1px solid #33312c;
+    text-align: center;
+    color: #d6d2c6;
+}
+
+QProgressBar::chunk {
+    background: #8a867c;
+}
+
+QToolTip {
+    background-color: #26241f;
+    color: #d6d2c6;
+    border: 1px solid #d6d2c6;
+    padding: 3px 6px;
+}
+
+/* The visualization widgets' paint parameters (doob "x-" properties):
+   a chunkier, more segmented look to match the retro feel. */
+#oscillogram {
+    x-line-width: 1;
+    x-box-size: 2px;
+}
+
+#peakmeter {
+    x-segments: 24;
+    x-bar-margin: 1px;
+}
+
+#spectrum {
+    x-segments: 24;
+    x-bar-margin: 1px;
+}
