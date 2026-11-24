@@ -17,12 +17,14 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 
+#include <array>
 #include <memory>
 
 #include "layoutmanager.h"
 #include "librarymanager.h"
 #include "medialistview.h"
 #include "currentplaylistwidget.h"
+#include "playlistfile.h"
 #include "rowclipboard.h"
 #include "urlimportdialog.h"
 #include "sourcemanager.h"
@@ -56,6 +58,23 @@ public:
     // The toolbar's chooser seam (QFileDialog is untestable offscreen).
     QStringList m_chosenFiles;
     QStringList chooseFiles() override { return m_chosenFiles; }
+
+    // The playlists menu's prompt seams (the dialogs are untestable
+    // offscreen).
+    QString m_newName;
+    QString askPlaylistName() override { return m_newName; }
+    QString m_renameTo;
+    QString askRenameName(const QString &current) override
+    {
+        Q_UNUSED(current)
+        return m_renameTo;
+    }
+    QString m_exportPath;
+    QString chooseExportPath(const QString &suggested) override
+    {
+        Q_UNUSED(suggested)
+        return m_exportPath;
+    }
 
     // The toolbar visibility seam (the base's protected setter, reached
     // through the subclass).
@@ -120,6 +139,17 @@ private slots:
     void addUrlOpensWizardOnWidget();
     void addUrlSecondTriggerRaisesOpenWizard();
     void addUrlConfirmedStreamUrlImportsIntoPlaylist();
+    void toolbarPlaylistsButtonOpensTheMenu();
+    void playlistsMenuListsEveryPlaylistWithCurrentChecked();
+    void playlistsMenuSelectionSwitchesCurrentPlaylist();
+    void playlistsMenuRebuiltWhenThePlaylistSetChanges();
+    void playlistsMenuNewPlaylistAsksNameAndAdds();
+    void playlistsMenuNewPlaylistBlankNameAddsNothing();
+    void playlistsMenuRenameRenamesCurrentPlaylist();
+    void playlistsMenuSaveDisabledForPlainPlaylist();
+    void playlistsMenuSaveWritesFileAndClearsDirty();
+    void playlistsMenuExportWritesFile();
+    void playlistsMenuDeleteRemovesCurrentPlaylist();
     void toolbarStateStoredOnlyWhenNonDefault();
     void followPlaybackScrollsToThePlayingItem();
     void followPlaybackStoredOnlyWhenOn();
@@ -135,6 +165,12 @@ private:
     QMenu* findOpenMenuFor(QWidget *widget);
     QMenu* findOpenMenu() { return findOpenMenuFor(m_widget); }
     QAction* findAction(QMenu *menu, const QString &text);
+    QMenu* playlistsMenu(QWidget *widget);
+    // The named action of the playlists menu (null when absent).
+    QAction* playlistsMenuAction(QWidget *widget, const QString &text);
+    // Fires the playlists menu's aboutToShow (the rebuild hook) the way
+    // the popup does.
+    void emitPlaylistsMenuAboutToShow(QWidget *widget);
     void sendContextMenu(MediaListView *view);
     // Multi-selects whole rows (selectRow clears the previous selection
     // when the new row is not selected already).
@@ -238,6 +274,31 @@ QAction* CurrentPlaylistWidgetTest::findAction(QMenu *menu, const QString &text)
         if (a->text() == text)
             return a;
     return nullptr;
+}
+
+QMenu* CurrentPlaylistWidgetTest::playlistsMenu(QWidget *widget)
+{
+    QToolButton *button = widget->findChild<QToolButton*>("playlistsButton");
+    return button != nullptr ? button->menu() : nullptr;
+}
+
+QAction* CurrentPlaylistWidgetTest::playlistsMenuAction(QWidget *widget,
+                                                        const QString &text)
+{
+    QMenu *menu = playlistsMenu(widget);
+    if (menu == nullptr)
+        return nullptr;
+    return findAction(menu, text);
+}
+
+void CurrentPlaylistWidgetTest::emitPlaylistsMenuAboutToShow(QWidget *widget)
+{
+    QMenu *menu = playlistsMenu(widget);
+    if (menu == nullptr)
+        QFAIL("no playlists menu");
+    std::array<void*, 1> args = { nullptr };
+    QMetaObject::activate(menu, menu->metaObject()->indexOfSignal("aboutToShow()"),
+                          args.data());
 }
 
 // Right-clicks the rows: sends the context-menu event the way Qt does after
@@ -1244,6 +1305,220 @@ void CurrentPlaylistWidgetTest::addUrlConfirmedStreamUrlImportsIntoPlaylist()
     QCOMPARE(m_pl->itemIds().at(0), storeIdFor(QUrl(stream)));
     // The fast path ends in QDialog::accept(): the wizard has closed and
     // queued itself for deletion, so it is not touched again.
+}
+
+void CurrentPlaylistWidgetTest::toolbarPlaylistsButtonOpensTheMenu()
+{
+    QToolButton *button = m_widget->findChild<QToolButton*>("playlistsButton");
+    QVERIFY(button != nullptr);
+    QCOMPARE(button->popupMode(), QToolButton::InstantPopup);
+    // The menu is the button's (the "+" add menu's pattern), empty until
+    // the first show.
+    QMenu *menu = playlistsMenu(m_widget);
+    QVERIFY(menu != nullptr);
+    QCOMPARE(menu->actions().size(), 0);
+}
+
+void CurrentPlaylistWidgetTest::playlistsMenuListsEveryPlaylistWithCurrentChecked()
+{
+    const quint64 road = m_pl->addPlaylist("Road");
+    m_pl->setCurrentPlaylist(road);
+
+    emitPlaylistsMenuAboutToShow(m_widget);
+    QMenu *menu = playlistsMenu(m_widget);
+    if (menu == nullptr) {
+        QFAIL("no playlists menu");
+        return;
+    }
+
+    // One entry per playlist, in list order; the current one checked.
+    QList<QAction*> entries;
+    for (QAction *a : menu->actions())
+        if (a->isCheckable())
+            entries << a;
+    QCOMPARE(entries.size(), 2);
+    QCOMPARE(entries.at(0)->text(), m_pl->playlists().at(0).displayName());
+    QCOMPARE(entries.at(1)->text(), QString("Road"));
+    QVERIFY(!entries.at(0)->isChecked());
+    QVERIFY(entries.at(1)->isChecked());
+}
+
+void CurrentPlaylistWidgetTest::playlistsMenuSelectionSwitchesCurrentPlaylist()
+{
+    const MediaItem a = addLibraryFile("a.mp3");
+    m_pl->addItems({ a.id });
+    const quint64 other = m_pl->addPlaylist("Other");
+    const MediaItem b = addLibraryFile("b.mp3");
+    m_pl->setCurrentPlaylist(other);
+    m_pl->addItems({ b.id });
+
+    emitPlaylistsMenuAboutToShow(m_widget);
+    // "Other" is current, hence checked: triggering a checked entry of
+    // the exclusive group is a no-op (a radio's pattern), so the switch
+    // is exercised through the other entry.
+    const QString first = m_pl->playlists().first().displayName();
+    QAction *entry = playlistsMenuAction(m_widget, first);
+    if (entry == nullptr) {
+        QFAIL("no entry for the first playlist");
+        return;
+    }
+    entry->trigger();
+
+    QCOMPARE(m_pl->currentPlaylistId(), m_pl->playlists().first().id);
+    // The widget follows the current playlist: the list shows the rows
+    // of the playlist now current.
+    QCOMPARE(m_widget->listView()->rowCount(), 1);
+    QCOMPARE(m_widget->listView()->listModel()->data(
+        m_widget->listView()->listModel()->index(0, MediaListModel::Title),
+        Qt::DisplayRole).toString(), QString("a"));
+}
+
+void CurrentPlaylistWidgetTest::playlistsMenuRebuiltWhenThePlaylistSetChanges()
+{
+    emitPlaylistsMenuAboutToShow(m_widget);
+    QMenu *menu = playlistsMenu(m_widget);
+    if (menu == nullptr) {
+        QFAIL("no playlists menu");
+        return;
+    }
+    QCOMPARE(menu->actions().size(), 7); // 1 + sep + 5
+
+    m_pl->addPlaylist("Road");
+    emitPlaylistsMenuAboutToShow(m_widget);
+
+    // A new entry for the new playlist (the menu was rebuilt on the
+    // second show).
+    QMenu *rebuilt = playlistsMenu(m_widget);
+    if (rebuilt == nullptr) {
+        QFAIL("no playlists menu");
+        return;
+    }
+    QVERIFY(findAction(rebuilt, "Road") != nullptr);
+    QCOMPARE(rebuilt->actions().size(), 8);
+}
+
+void CurrentPlaylistWidgetTest::playlistsMenuNewPlaylistAsksNameAndAdds()
+{
+    TestCurrentPlaylistWidget w;
+    w.show();
+    w.m_newName = "Fresh";
+
+    emitPlaylistsMenuAboutToShow(&w);
+    QAction *add = playlistsMenuAction(&w, "New playlist");
+    if (add == nullptr) {
+        QFAIL("no \"New playlist\" entry");
+        return;
+    }
+    add->trigger();
+
+    QCOMPARE(m_pl->playlistCount(), 2);
+    QCOMPARE(m_pl->playlists().last().name, QString("Fresh"));
+    // A new playlist is not made current (the switch is a separate act).
+    QVERIFY(m_pl->currentPlaylistId() != m_pl->playlists().last().id);
+}
+
+void CurrentPlaylistWidgetTest::playlistsMenuNewPlaylistBlankNameAddsNothing()
+{
+    TestCurrentPlaylistWidget w;
+    w.show();
+    w.m_newName = "   ";
+
+    emitPlaylistsMenuAboutToShow(&w);
+    QAction *add = playlistsMenuAction(&w, "New playlist");
+    if (add == nullptr) {
+        QFAIL("no \"New playlist\" entry");
+        return;
+    }
+    add->trigger();
+
+    QCOMPARE(m_pl->playlistCount(), 1);
+}
+
+void CurrentPlaylistWidgetTest::playlistsMenuRenameRenamesCurrentPlaylist()
+{
+    TestCurrentPlaylistWidget w;
+    w.show();
+    w.m_renameTo = "Renamed";
+
+    emitPlaylistsMenuAboutToShow(&w);
+    QAction *rename = playlistsMenuAction(&w, "Rename...");
+    if (rename == nullptr) {
+        QFAIL("no \"Rename...\" entry");
+        return;
+    }
+    rename->trigger();
+
+    QCOMPARE(m_pl->currentPlaylistName(), QString("Renamed"));
+}
+
+void CurrentPlaylistWidgetTest::playlistsMenuSaveDisabledForPlainPlaylist()
+{
+    emitPlaylistsMenuAboutToShow(m_widget);
+    QAction *save = playlistsMenuAction(m_widget, "Save");
+    QVERIFY(save != nullptr);
+    // Not imported (no source file): a save has no target.
+    QVERIFY(!save->isEnabled());
+}
+
+void CurrentPlaylistWidgetTest::playlistsMenuSaveWritesFileAndClearsDirty()
+{
+    const quint64 current = m_pl->currentPlaylistId();
+    const QString source = m_dir->path() + "/road.m3u";
+    m_pl->markImported(current, QUrl::fromLocalFile(source).toString());
+    const MediaItem a = addLibraryFile("a.mp3");
+    m_pl->addItems({ a.id });
+    QVERIFY(m_pl->playlist(current).dirty);
+
+    emitPlaylistsMenuAboutToShow(m_widget);
+    QAction *save = playlistsMenuAction(m_widget, "Save");
+    QVERIFY(save != nullptr);
+    QVERIFY(save->isEnabled());
+    save->trigger();
+
+    QVERIFY(!m_pl->playlist(current).dirty);
+    PlaylistFile file;
+    QVERIFY(parsePlaylistFile(source, file));
+    QCOMPARE(file.entries, QList<QUrl>({ a.source }));
+}
+
+void CurrentPlaylistWidgetTest::playlistsMenuExportWritesFile()
+{
+    const MediaItem a = addLibraryFile("a.mp3");
+    m_pl->addItems({ a.id });
+    TestCurrentPlaylistWidget w;
+    w.show();
+    const QString path = m_dir->path() + "/out.m3u";
+    w.m_exportPath = path;
+
+    emitPlaylistsMenuAboutToShow(&w);
+    QAction *exportAction = playlistsMenuAction(&w, "Export to file...");
+    if (exportAction == nullptr) {
+        QFAIL("no \"Export to file...\" entry");
+        return;
+    }
+    exportAction->trigger();
+
+    PlaylistFile file;
+    QVERIFY(parsePlaylistFile(path, file));
+    QCOMPARE(file.entries, QList<QUrl>({ a.source }));
+}
+
+void CurrentPlaylistWidgetTest::playlistsMenuDeleteRemovesCurrentPlaylist()
+{
+    const quint64 other = m_pl->addPlaylist("Other");
+    m_pl->setCurrentPlaylist(other);
+
+    emitPlaylistsMenuAboutToShow(m_widget);
+    QAction *remove = playlistsMenuAction(m_widget, "Delete playlist");
+    if (remove == nullptr) {
+        QFAIL("no \"Delete playlist\" entry");
+        return;
+    }
+    remove->trigger();
+
+    QCOMPARE(m_pl->playlistCount(), 1);
+    // The removed playlist was current: the first remaining one is.
+    QCOMPARE(m_pl->currentPlaylistId(), m_pl->playlists().first().id);
 }
 
 void CurrentPlaylistWidgetTest::toolbarStateStoredOnlyWhenNonDefault()

@@ -6,6 +6,8 @@
 #include <QString>
 #include <QStringList>
 
+#include <functional>
+
 class QToolBar;
 class QAction;
 class QWidget;
@@ -55,5 +57,17 @@ QString choosePlaylistExportPath(QWidget *parent, const QString &suggested);
 // The rename prompt: the current name prefilled, an empty string on
 // cancel.
 QString askPlaylistRename(QWidget *parent, const QString &current);
+
+// The playlist-level verbs — "Rename...", "Export to file..." and
+// "Save" (enabled for an imported playlist with a source file only) —
+// appended to `menu` for the named playlist. The surfaces that offer
+// them (the tabs' right-click menu, the playlist list's row menu, the
+// toolbar's playlists menu) share the entries. `askName` and
+// `chooseExport` are the surface's prompt seams (the dialogs are
+// untestable offscreen); the playlist is re-read at trigger time, so a
+// stale id is a no-op.
+void addPlaylistVerbActions(QMenu *menu, quint64 playlistId,
+                            const std::function<QString(const QString &)> &askName,
+                            const std::function<QString(const QString &)> &chooseExport);
 
 #endif // PLAYLISTTOOLBAR_H

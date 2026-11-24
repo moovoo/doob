@@ -297,6 +297,20 @@ itself is `urlwizard.{h,cpp}` — a QObject owned by the widget holding a
 single-instance `UrlImportDialog` (a second trigger raises the open one;
 `open(lines)` prefills only a freshly created wizard) and routing its
 `sourcesConfirmed` to the widget's sink — the library widget uses it too.
+The **playlist-level verbs** ("Rename...", "Export to file..." and
+"Save" — the last enabled for an imported playlist with a source file
+only) live there as well: `addPlaylistVerbActions` appends them to a
+menu for a named playlist id, the prompts coming in as two `std::function`
+seams (`askName`/`chooseExport`, the dialogs being untestable offscreen),
+and the playlist is re-read at trigger (a stale id is a no-op) — the
+surfaces that offer them share the helper: `playlistswidget.cpp` (the
+tab's context menu), `playlistlistwidget.cpp` (the row menu) and the
+current playlist's toolbar menu. That toolbar (`currentplaylistwidget.cpp`)
+leads with a "≡" playlists button (`playlistsButton`, `InstantPopup`) whose
+menu is **rebuilt on every `aboutToShow`**: a radio entry per playlist
+(the current one checked; selecting an entry switches the current playlist,
+stopping playback like any switch), a separator, "New playlist", the shared
+verb set for the current playlist and "Delete playlist".
 
 ## Topics
 

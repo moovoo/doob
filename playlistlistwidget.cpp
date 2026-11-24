@@ -287,40 +287,14 @@ void PlaylistListWidget::onContextMenu(const QPoint &pos)
 void PlaylistListWidget::addSelectedActions(QMenu *menu, quint64 selectedId)
 {
     const Playlist selected = m_pl->playlist(selectedId);
-    if (selected.isValid()) {
-        QAction *rename = menu->addAction("Rename...");
-        connect(rename, &QAction::triggered, this, [this, selectedId] {
-            const Playlist current = m_pl->playlist(selectedId);
-            if (!current.isValid())
-                return;
-            const QString name = askRenameName(current.name).trimmed();
-            if (!name.isEmpty())
-                m_pl->renamePlaylist(selectedId, name);
-        });
-
-        QAction *exportAction = menu->addAction("Export to file...");
-        connect(exportAction, &QAction::triggered, this, [this, selectedId] {
-            const Playlist current = m_pl->playlist(selectedId);
-            if (!current.isValid())
-                return;
-            const QString path =
-                chooseExportPath(current.name + QStringLiteral(".m3u"));
-            if (!path.isEmpty())
-                m_pl->exportPlaylist(selectedId, path);
-        });
-
-        // A save writes the imported playlist back to the file it
-        // came from.
-        QAction *save = menu->addAction("Save");
-        save->setEnabled(selected.imported && !selected.sourceFile.isEmpty());
-        connect(save, &QAction::triggered, this, [this, selectedId] {
-            const Playlist current = m_pl->playlist(selectedId);
-            if (current.isValid() && current.imported
-                && !current.sourceFile.isEmpty())
-                m_pl->savePlaylist(selectedId,
-                                   QUrl(current.sourceFile).toLocalFile());
-        });
-    }
+    if (selected.isValid())
+        addPlaylistVerbActions(menu, selectedId,
+                               [this](const QString &current) {
+                                   return askRenameName(current);
+                               },
+                               [this](const QString &suggested) {
+                                   return chooseExportPath(suggested);
+                               });
 
     QAction *remove = menu->addAction("Delete playlist");
     connect(remove, &QAction::triggered, this, [this, selectedId] {

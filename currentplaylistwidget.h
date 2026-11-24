@@ -13,6 +13,9 @@ class MediaListModel;
 class MediaListView;
 class PlaylistManager;
 class PlaybackManager;
+class QActionGroup;
+class QMenu;
+class QToolButton;
 class UrlWizard;
 
 class CurrentPlaylistWidget : public BaseWidget
@@ -39,6 +42,16 @@ protected:
     // seam (QFileDialog is untestable offscreen), like the library
     // widget's choosers.
     virtual QStringList chooseFiles();
+    // The name the user entered for a new playlist (empty on cancel);
+    // the toolbar's playlists menu's "New playlist". A test seam, like
+    // PlaylistListWidget::askPlaylistName.
+    virtual QString askPlaylistName();
+    // The name the user entered for the current playlist's rename
+    // (empty on cancel); a test seam, like askPlaylistName.
+    virtual QString askRenameName(const QString &current);
+    // The path the user chose for the current playlist's export (empty
+    // on cancel); a test seam, like askPlaylistName.
+    virtual QString chooseExportPath(const QString &suggested);
 
     // Opens the metadata editor for the given item ids. A test seam (the
     // dialog is modal, untestable offscreen).
@@ -60,6 +73,9 @@ private slots:
     void onAddFiles();
     void onAddUrl();
     void onRemoveSelected();
+    // The toolbar's playlists menu is rebuilt on every show (the playlist
+    // set is dynamic): the entries, and the verbs of the current playlist.
+    void onPlaylistsMenuAboutToShow();
     // Right-click on the rows (outside edit mode): remove the selection.
     void onViewContextMenu(const QPoint &pos);
     void onPlaylistChanged(quint64 playlistId);
@@ -80,6 +96,12 @@ private:
     PlaylistManager* m_pl;
     PlaybackManager* m_pm;
     MediaItemStore* m_store;
+    // The toolbar's playlists button (the switcher and the management
+    // verbs) and its menu (rebuilt on every show), and the entries'
+    // exclusive group (the menu's: the rebuilt actions join and leave it).
+    QToolButton* m_playlistsButton;
+    QMenu* m_playlistsMenu;
+    QActionGroup* m_playlistsGroup;
     // The "Add by URL..." wizard's single-instance plumbing (shared with
     // the other widgets that offer it).
     UrlWizard* m_wizard;

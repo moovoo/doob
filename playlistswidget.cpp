@@ -761,29 +761,13 @@ void PlaylistsWidget::onTabContextMenu(const QPoint &pos)
 
     QMenu *menu = transientMenu(this);
 
-    QAction *rename = menu->addAction("Rename...");
-    connect(rename, &QAction::triggered, this, [this, plId, pl] {
-        const QString name = askPlaylistName(pl.name);
-        if (!name.isEmpty())
-            m_pl->renamePlaylist(plId, name);
-    });
-
-    QAction *exportAction = menu->addAction("Export to file...");
-    connect(exportAction, &QAction::triggered, this, [this, plId, pl] {
-        const QString path = chooseExportPath(pl.name + QLatin1String(".m3u"));
-        if (!path.isEmpty())
-            m_pl->exportPlaylist(plId, path);
-    });
-
-    // A save writes the imported playlist back to the file it came from.
-    QAction *save = menu->addAction("Save");
-    save->setEnabled(pl.imported && !pl.sourceFile.isEmpty());
-    connect(save, &QAction::triggered, this, [this, plId] {
-        const Playlist current = m_pl->playlist(plId);
-        if (current.imported && !current.sourceFile.isEmpty())
-            m_pl->savePlaylist(plId,
-                               QUrl(current.sourceFile).toLocalFile());
-    });
+    addPlaylistVerbActions(menu, plId,
+                           [this](const QString &current) {
+                               return askPlaylistName(current);
+                           },
+                           [this](const QString &suggested) {
+                               return chooseExportPath(suggested);
+                           });
 
     menu->popup(bar->mapToGlobal(pos));
 }

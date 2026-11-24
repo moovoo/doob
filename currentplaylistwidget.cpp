@@ -13,6 +13,9 @@
 #include "urlwizard.h"
 
 #include <QAction>
+#include <QActionGroup>
+#include <QInputDialog>
+#include <QLineEdit>
 #include <QMenu>
 #include <QToolBar>
 #include <QToolButton>
@@ -36,12 +39,29 @@ CurrentPlaylistWidget::CurrentPlaylistWidget(QWidget *parent)
     QVBoxLayout* vlayout = new QVBoxLayout(this);
     vlayout->setContentsMargins(0, 0, 0, 0);
 
-    // Toolbar (visible by default): "+" adds items to the current
-    // playlist — chosen files through the same import as a file drop,
-    // URLs through the import wizard — "−" removes the selection: the
-    // toolbar's clicks mirror the drag & drop paths, with a file chooser
-    // (or the wizard) standing in for the drop.
+    // Toolbar (visible by default): the playlists button switches and
+    // manages the playlists (its menu is rebuilt on every show — the
+    // widget itself only shows the current playlist, so this is the
+    // mouse-driven switch), "+" adds items to the current playlist —
+    // chosen files through the same import as a file drop, URLs through
+    // the import wizard — "−" removes the selection: the toolbar's
+    // clicks mirror the drag & drop paths, with a file chooser (or the
+    // wizard) standing in for the drop.
     QToolBar* toolbar = createToolbar(true);
+    m_playlistsButton = new QToolButton(toolbar);
+    m_playlistsButton->setObjectName("playlistsButton");
+    m_playlistsButton->setText(QString(QChar(0x2261)));
+    m_playlistsButton->setToolTip("Playlists: switch and manage");
+    m_playlistsButton->setPopupMode(QToolButton::InstantPopup);
+    m_playlistsMenu = new QMenu(m_playlistsButton);
+    m_playlistsButton->setMenu(m_playlistsMenu);
+    toolbar->addWidget(m_playlistsButton);
+    // The entries' radio group (the menu's, the rebuild's actions are
+    // its — a rebuilt action leaves the group when the menu clears it).
+    m_playlistsGroup = new QActionGroup(m_playlistsMenu);
+    m_playlistsGroup->setExclusive(true);
+    connect(m_playlistsMenu, &QMenu::aboutToShow, this,
+            &CurrentPlaylistWidget::onPlaylistsMenuAboutToShow);
     const PlaylistToolbarButtons buttons =
         createPlaylistToolbar(toolbar, QStringLiteral("the current playlist"));
     addToolbarSpacer(toolbar);
@@ -240,6 +260,26 @@ QStringList CurrentPlaylistWidget::chooseFiles()
     return chooseAudioFiles(this);
 }
 
+QString CurrentPlaylistWidget::askPlaylistName()
+{
+    bool ok = false;
+    const QString name = QInputDialog::getText(window(), "New playlist",
+                                               "Playlist name:",
+                                               QLineEdit::Normal, QString(),
+                                               &ok);
+    return ok ? name : QString();
+}
+
+QString CurrentPlaylistWidget::askRenameName(const QString &current)
+{
+    return askPlaylistRename(window(), current);
+}
+
+QString CurrentPlaylistWidget::chooseExportPath(const QString &suggested)
+{
+    return choosePlaylistExportPath(window(), suggested);
+}
+
 void CurrentPlaylistWidget::onAddFiles()
 {
     // The chosen files are imported as a file drop would be (external
@@ -264,6 +304,53 @@ void CurrentPlaylistWidget::onRemoveSelected()
     // the same item in several rows, and removing one copy must not take
     // the others.
     m_pl->removeRowsInPlaylist(m_pl->currentPlaylistId(), m_view->selectedRows());
+}
+
+void CurrentPlaylistWidget::onPlaylistsMenuAboutToShow()
+{
+    // The menu is rebuilt on every show: the playlist set is dynamic
+    // (adds, removals, renames and current changes all alter it).
+    m_playlistsMenu->clear();
+
+    // One entry per playlist, in list order: the exclusive group makes
+    // them radio options, the current playlist checked. A selection
+    // switches the current playlist (stopping playback, the switch's
+    // invariant — the same as the switch shortcuts). The group is the
+    // menu's own (created once in the constructor): the rebuilt actions
+    // leave it on their deletion, so no group of a previous show lingers.
+    QActionGroup *group = m_playlistsGroup;
+    for (const Playlist &pl : m_pl->playlists()) {
+        QAction *action = m_playlistsMenu->addAction(pl.displayName());
+        action->setCheckable(true);
+        action->setChecked(pl.id == m_pl->currentPlaylistId());
+        group->addAction(action);
+        connect(action, &QAction::triggered, this, [this, id = pl.id] {
+            m_pl->setCurrentPlaylist(id);
+        });
+    }
+
+    m_playlistsMenu->addSeparator();
+
+    // The management verbs of the current playlist: a new playlist, the
+    // shared set (rename / export / save) and the delete.
+    QAction *add = m_playlistsMenu->addAction("New playlist");
+    connect(add, &QAction::triggered, this, [this] {
+        const QString name = askPlaylistName().trimmed();
+        if (!name.isEmpty())
+            m_pl->addPlaylist(name);
+    });
+    const quint64 currentId = m_pl->currentPlaylistId();
+    addPlaylistVerbActions(m_playlistsMenu, currentId,
+                           [this](const QString &current) {
+                               return askRenameName(current);
+                           },
+                           [this](const QString &suggested) {
+                               return chooseExportPath(suggested);
+                           });
+    QAction *remove = m_playlistsMenu->addAction("Delete playlist");
+    connect(remove, &QAction::triggered, this, [this] {
+        m_pl->removePlaylist(m_pl->currentPlaylistId());
+    });
 }
 
 void CurrentPlaylistWidget::onViewContextMenu(const QPoint &pos)

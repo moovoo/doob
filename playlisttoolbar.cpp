@@ -1,13 +1,16 @@
 #include "playlisttoolbar.h"
 #include "librarymanager.h"
+#include "playlistmanager.h"
 
 #include <QAction>
 #include <QChar>
 #include <QFileDialog>
+#include <QObject>
 #include <QInputDialog>
 #include <QLineEdit>
 #include <QToolBar>
 #include <QToolButton>
+#include <QUrl>
 #include <QWidget>
 
 PlaylistToolbarButtons createPlaylistToolbar(QToolBar *toolbar,
@@ -76,4 +79,46 @@ QString askPlaylistRename(QWidget *parent, const QString &current)
         QInputDialog::getText(parent, "Rename playlist", "Name:",
                               QLineEdit::Normal, current, &ok);
     return ok ? name : QString();
+}
+
+void addPlaylistVerbActions(QMenu *menu, quint64 playlistId,
+                            const std::function<QString(const QString &)> &askName,
+                            const std::function<QString(const QString &)> &chooseExport)
+{
+    PlaylistManager *pl = PlaylistManager::getInstance();
+
+    QAction *rename = menu->addAction("Rename...");
+    QObject::connect(rename, &QAction::triggered, [pl, playlistId, askName] {
+        const Playlist current = pl->playlist(playlistId);
+        if (!current.isValid())
+            return;
+        const QString name = askName(current.name).trimmed();
+        if (!name.isEmpty())
+            pl->renamePlaylist(playlistId, name);
+    });
+
+    QAction *exportAction = menu->addAction("Export to file...");
+    QObject::connect(exportAction, &QAction::triggered, [pl, playlistId, chooseExport] {
+        const Playlist current = pl->playlist(playlistId);
+        if (!current.isValid())
+            return;
+        const QString path =
+            chooseExport(current.name + QStringLiteral(".m3u"));
+        if (!path.isEmpty())
+            pl->exportPlaylist(playlistId, path);
+    });
+
+    // A save writes the imported playlist back to the file it came
+    // from.
+    QAction *save = menu->addAction("Save");
+    const Playlist selected = pl->playlist(playlistId);
+    save->setEnabled(selected.isValid() && selected.imported
+                     && !selected.sourceFile.isEmpty());
+    QObject::connect(save, &QAction::triggered, [pl, playlistId] {
+        const Playlist current = pl->playlist(playlistId);
+        if (current.isValid() && current.imported
+            && !current.sourceFile.isEmpty())
+            pl->savePlaylist(playlistId,
+                             QUrl(current.sourceFile).toLocalFile());
+    });
 }
